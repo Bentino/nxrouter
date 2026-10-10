@@ -1,0 +1,127 @@
+{
+  "commands": [
+    {
+      "command": "nxRouter.openSpike",
+      "title": "NX Router: Open Native Spike"
+    },
+    {
+      "command": "nxRouter.acceptanceEvidence",
+      "title": "NX Router: Inspect Acceptance Evidence"
+    },
+    {
+      "command": "nxRouter.cancellationTask",
+      "title": "NX Router: Run Cancellation Task Fixture"
+    }
+  ],
+  "languageModelChatProviders": [
+    {
+      "vendor": "nx-spike",
+      "displayName": "NX Spike (offline stub)"
+    }
+  ],
+  "languageModelTools": [
+    {
+      "name": "nx_spike_workspace",
+      "displayName": "NX Spike Workspace",
+      "toolReferenceName": "nxSpikeWorkspace",
+      "canBeReferencedInPrompt": true,
+      "modelDescription": "IMP-01 demo only. read reads .nx-router-spike/example.txt; write proposes fixed content in a native diff and requires Apply; verify executes a fixed Node assertion through a native Task. Never accepts a path or shell command.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "read",
+              "write",
+              "verify"
+            ]
+          }
+        },
+        "required": [
+          "operation"
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "nx_spike_safe",
+      "displayName": "NX Spike SAFE",
+      "toolReferenceName": "nxSpikeSafe",
+      "canBeReferencedInPrompt": true,
+      "modelDescription": "IMP-01B fixed fixture: read. Dangerous only simulates; no destructive action.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "nx_spike_write",
+      "displayName": "NX Spike WRITE",
+      "toolReferenceName": "nxSpikeWrite",
+      "canBeReferencedInPrompt": true,
+      "modelDescription": "IMP-01B fixed fixture: write. Dangerous only simulates; no destructive action.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "nx_spike_execute",
+      "displayName": "NX Spike EXECUTE",
+      "toolReferenceName": "nxSpikeExecute",
+      "canBeReferencedInPrompt": true,
+      "modelDescription": "IMP-01B fixed fixture: verify. Dangerous only simulates; no destructive action.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "nx_spike_dangerous",
+      "displayName": "NX Spike DANGEROUS",
+      "toolReferenceName": "nxSpikeDangerous",
+      "canBeReferencedInPrompt": true,
+      "modelDescription": "IMP-01B fixed fixture: dangerous. Dangerous only simulates; no destructive action.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  ],
+  "configuration": {
+    "properties": {
+      "nxRouter.models.low": {
+        "type": "string",
+        "default": "gpt-6-luna",
+        "minLength": 1,
+        "scope": "application",
+        "description": "Development VS Code LM bridge LOW model ID; not the authenticated OpenAI profile mapping."
+      },
+      "nxRouter.models.medium": {
+        "type": "string",
+        "default": "gpt-6-sol",
+        "minLength": 1,
+        "scope": "application",
+        "description": "Development VS Code LM bridge MEDIUM model ID; not the authenticated OpenAI profile mapping."
+      },
+      "nxRouter.models.high": {
+        "type": "string",
+        "default": "gpt-6-astra",
+        "minLength": 1,
+        "scope": "application",
+        "description": "Development VS Code LM bridge HIGH model ID; not the authenticated OpenAI profile mapping."
+      },
+      "nxRouter.worker.fixtureModels": {
+        "type": "boolean",
+        "default": false,
+        "description": "Development/testing only: use deterministic offline worker models. Keep false for normal use.",
+        "scope": "window"
+      }
+    }
+  }
+}

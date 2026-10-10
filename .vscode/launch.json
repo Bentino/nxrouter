@@ -1,0 +1,8 @@
+{
+  "version": "0.2.0",
+  "configurations": [{
+    "name": "NX Router: IMP-01", "type": "extensionHost", "request": "launch",
+    "args": ["--extensionDevelopmentPath=${workspaceFolder}", "${workspaceFolder}"],
+    "outFiles": ["${workspaceFolder}/out/**/*.js"], "preLaunchTask": "npm: compile"
+  }]
+}

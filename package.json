@@ -1,0 +1,530 @@
+{
+  "name": "nx-router",
+  "displayName": "NX Router",
+  "description": "Adaptive LOW, MEDIUM and HIGH routing with guarded coding tools for VS Code Chat.",
+  "version": "0.1.0",
+  "license": "GPL-3.0-only",
+  "publisher": "nx-router",
+  "private": true,
+  "engines": {
+    "vscode": "^1.140.0"
+  },
+  "categories": [
+    "AI",
+    "Chat"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onView:nxRouter.sidebar"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "check": "tsc -p . --noEmit",
+    "test:openai-stream": "npm run compile && node scripts/test-openai-stream.cjs",
+    "test": "npm run compile && node scripts/test-openai-stream.cjs && npm run test:benchmark && node scripts/test-host.cjs",
+    "test:benchmark": "node scripts/test-benchmark-report.cjs && node scripts/test-benchmark-workspace.cjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/vscode": "1.140.0",
+    "typescript": "^5.9.3",
+    "playwright-core": "^1.56.0"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "nxRouter.connectOpenAI",
+        "title": "NX Router: Connect OpenAI"
+      },
+      {
+        "command": "nxRouter.openAIStatus",
+        "title": "NX Router: OpenAI Connection Status"
+      },
+      {
+        "command": "nxRouter.configureOpenAIModels",
+        "title": "NX Router: Configure OpenAI Models"
+      },
+      {
+        "command": "nxRouter.testOpenAI",
+        "title": "NX Router: Test OpenAI Connection"
+      },
+      {
+        "command": "nxRouter.disconnectOpenAI",
+        "title": "NX Router: Disconnect OpenAI"
+      },
+      {
+        "command": "nxRouter.telemetryStatus",
+        "title": "NX Router: Telemetry Status"
+      },
+      {
+        "command": "nxRouter.exportSessionTelemetry",
+        "title": "NX Router: Export Latest Session Telemetry"
+      },
+      {
+        "command": "nxRouter.clearSessionTelemetry",
+        "title": "NX Router: Clear Latest Session Telemetry"
+      },
+      {
+        "command": "nxRouter.clearWorkspaceTelemetry",
+        "title": "NX Router: Clear Workspace Telemetry"
+      },
+      {
+        "command": "nxRouter.clearAllTelemetry",
+        "title": "NX Router: Clear All Telemetry"
+      }
+    ],
+    "chatParticipants": [
+      {
+        "id": "nx-router.spike",
+        "name": "nx",
+        "fullName": "NX Router",
+        "description": "Guarded router with bounded worker loop.",
+        "commands": [
+          {
+            "name": "low",
+            "description": "Prefer LOW for this turn; safety policy may upgrade it."
+          },
+          {
+            "name": "medium",
+            "description": "Prefer MEDIUM for this turn; safety policy may upgrade it."
+          },
+          {
+            "name": "high",
+            "description": "Use HIGH for this turn."
+          }
+        ]
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "nx_request_escalation",
+        "displayName": "NX Request Escalation",
+        "toolReferenceName": "nx_request_escalation",
+        "canBeReferencedInPrompt": false,
+        "modelDescription": "Internal control: report a material risk or complexity change with observed facts. Documentation keywords alone cannot support an operation claim. No workspace side effect; NX verifies provenance.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "low_complexity_invalidated",
+                "architecture_invalidated",
+                "security_boundary",
+                "existing_data_mutation",
+                "production_mutation",
+                "consequential_write",
+                "destructive_operation",
+                "broad_contract",
+                "conflicting_evidence"
+              ]
+            },
+            "summary": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "targetRoute": {
+              "type": "string",
+              "enum": [
+                "MEDIUM",
+                "HIGH"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "summary",
+            "targetRoute"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_read",
+        "displayName": "Nx Read",
+        "toolReferenceName": "nx_read",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Read a known workspace-relative file directly. One-based inclusive lines; at most 200 per call. Omit range for lines 1-200; continue with 201-400, etc. Content is capped at 8000 characters per result.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Known workspace-relative file path. Read directly; no leading/trailing whitespace."
+            },
+            "startLine": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000,
+              "description": "First line, inclusive. Default 1."
+            },
+            "endLine": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000,
+              "description": "Last line, inclusive. Must be at least startLine and no more than startLine + 199."
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_search",
+        "displayName": "Nx Search",
+        "toolReferenceName": "nx_search",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "PATH DISCOVERY: omit query; include one filename glob. CONTENT SEARCH: supply a nonempty case-sensitive literal query. Never use placeholder query text to locate a file. Read known paths directly. Globs cannot have outer whitespace, braces, or comma lists. Returns at most the configured match limit.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "description": "Optional literal content substring. Omit to list matching file paths."
+            },
+            "include": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^[^{},]+$",
+              "description": "One nonempty VS Code path glob, e.g. **/AGENTS.md; omit query to discover paths. No outer whitespace, braces, or comma lists."
+            },
+            "exclude": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200,
+              "pattern": "^[^{},]+$",
+              "description": "One nonempty VS Code exclusion glob. No outer whitespace, braces, or comma lists; omit for defaults."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_diagnostics",
+        "displayName": "Nx Diagnostics",
+        "toolReferenceName": "nx_diagnostics",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Inspect bounded VS Code diagnostics for a file or workspace.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Workspace-relative path within the single local workspace root."
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_git_status",
+        "displayName": "Nx Git Status",
+        "toolReferenceName": "nx_git_status",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Read-only bounded git status in workspace root.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_git_diff",
+        "displayName": "Nx Git Diff",
+        "toolReferenceName": "nx_git_diff",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Read-only bounded git diff; cached true selects staged diff.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "cached": {
+              "type": "boolean"
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_create_file",
+        "displayName": "Nx Create File",
+        "toolReferenceName": "nx_create_file",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Create a new text file after native approval and exact diff Apply.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Workspace-relative path within the single local workspace root."
+            },
+            "content": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "path",
+            "content"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_edit_file",
+        "displayName": "Nx Edit File",
+        "toolReferenceName": "nx_edit_file",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Apply structured 1-based range edits after native approval and exact diff Apply.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "Workspace-relative path within the single local workspace root."
+            },
+            "edits": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "range": {
+                    "type": "object",
+                    "properties": {
+                      "startLine": {
+                        "type": "integer"
+                      },
+                      "startCharacter": {
+                        "type": "integer"
+                      },
+                      "endLine": {
+                        "type": "integer"
+                      },
+                      "endCharacter": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "startLine",
+                      "startCharacter",
+                      "endLine",
+                      "endCharacter"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "text": {
+                    "type": "string"
+                  },
+                  "expectedText": {
+                    "type": "string",
+                    "description": "Exact current text in the range; detects stale edits."
+                  }
+                },
+                "required": [
+                  "range",
+                  "text",
+                  "expectedText"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "path",
+            "edits"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_move_file",
+        "displayName": "Nx Move File",
+        "toolReferenceName": "nx_move_file",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Move a file inside workspace after approval and target confirmation.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "string",
+              "description": "Workspace-relative path within the single local workspace root."
+            },
+            "destination": {
+              "type": "string",
+              "description": "Workspace-relative path within the single local workspace root."
+            }
+          },
+          "required": [
+            "source",
+            "destination"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_copy_file",
+        "displayName": "Nx Copy File",
+        "toolReferenceName": "nx_copy_file",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Copy a file inside workspace after approval and target confirmation.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "string",
+              "description": "Workspace-relative path within the single local workspace root."
+            },
+            "destination": {
+              "type": "string",
+              "description": "Workspace-relative path within the single local workspace root."
+            }
+          },
+          "required": [
+            "source",
+            "destination"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "nx_execute",
+        "displayName": "Nx Execute",
+        "toolReferenceName": "nx_execute",
+        "canBeReferencedInPrompt": true,
+        "modelDescription": "Run allowlisted verification command with argument vector, bounded output and timeout.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "command": {
+              "type": "string"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "cwd": {
+              "type": "string",
+              "description": "Workspace-relative path within the single local workspace root."
+            },
+            "timeoutMs": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "command",
+            "args"
+          ],
+          "additionalProperties": false
+        }
+      }
+    ],
+    "configuration": {
+      "title": "NX Router",
+      "properties": {
+        "nxRouter.providers.openai.routerModel": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "markdownDescription": "OpenAI Router model. Validated against the currently linked account. Use **NX Router: Configure OpenAI Models** to choose an available model."
+        },
+        "nxRouter.providers.openai.lowModel": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "markdownDescription": "OpenAI LOW worker model. Validated against the currently linked account. Use **NX Router: Configure OpenAI Models** to choose an available model."
+        },
+        "nxRouter.providers.openai.mediumModel": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "markdownDescription": "OpenAI MEDIUM worker model. Validated against the currently linked account. Use **NX Router: Configure OpenAI Models** to choose an available model."
+        },
+        "nxRouter.providers.openai.highModel": {
+          "type": "string",
+          "default": "",
+          "scope": "application",
+          "markdownDescription": "OpenAI HIGH worker model. Validated against the currently linked account. Use **NX Router: Configure OpenAI Models** to choose an available model."
+        },
+        "nxRouter.telemetry.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Store local metadata-only NX Router telemetry in VS Code extension global storage. No cloud upload.",
+          "scope": "window"
+        },
+        "nxRouter.telemetry.retentionDays": {
+          "type": "integer",
+          "default": 90,
+          "minimum": 1,
+          "description": "Keep local telemetry for 1\u20133650 days; old records are cleaned at activation and when this changes.",
+          "maximum": 3650,
+          "scope": "window"
+        },
+        "nxRouter.execution.timeoutSeconds": {
+          "type": "integer",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 120,
+          "scope": "application",
+          "description": "Default timeout for allowlisted verification commands, in seconds. Per-call timeout remains capped at 120 seconds."
+        },
+        "nxRouter.tools.maxReadChars": {
+          "type": "integer",
+          "default": 65536,
+          "minimum": 1024,
+          "maximum": 65536,
+          "scope": "application",
+          "description": "Maximum UTF-8 bytes read or edited per file by NX tools; 1024\u201365536."
+        },
+        "nxRouter.tools.maxSearchResults": {
+          "type": "integer",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 100,
+          "scope": "application",
+          "description": "Maximum file/text matches returned by one NX search; 1\u2013100."
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "nxRouter",
+          "title": "NX Router",
+          "icon": "media/nx-router.svg"
+        }
+      ]
+    },
+    "views": {
+      "nxRouter": [
+        {
+          "id": "nxRouter.sidebar",
+          "name": "NX Router",
+          "type": "webview"
+        }
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bentino/nxrouter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bentino/nxrouter/issues"
+  },
+  "homepage": "https://github.com/Bentino/nxrouter"
+}

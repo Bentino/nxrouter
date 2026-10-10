@@ -1,0 +1,112 @@
+body { margin: 0; padding: 12px; color: var(--vscode-foreground); background: var(--vscode-sideBar-background); font-family: var(--vscode-font-family); font-size: var(--vscode-font-size); }
+header { display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 12px; }
+#navigation { min-width: 0; }
+.icon-button { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 5px; }
+.icon-button svg { display: block; }
+button * { cursor: inherit; }
+h1, h2 { font-size: 14px; margin: 0 0 8px; font-weight: 600; }
+h3, h4, h5, h6 { font-size: inherit; font-weight: 600; margin: 16px 0 6px; }
+p { line-height: 1.5; overflow-wrap: anywhere; margin: 8px 0; }
+section { margin: 18px 0; }
+button { font: inherit; cursor: pointer; border: 1px solid var(--vscode-contrastBorder, var(--vscode-panel-border, var(--vscode-descriptionForeground))); border-radius: 3px; padding: 4px 7px; color: var(--vscode-button-secondaryForeground, var(--vscode-foreground)); background: color-mix(in srgb, var(--vscode-input-background, var(--vscode-editorWidget-background)) 88%, var(--vscode-foreground)); }
+button:hover { cursor: pointer; background: var(--vscode-list-hoverBackground, var(--vscode-input-background)); }
+button:focus-visible, summary:focus-visible, a:focus-visible { outline: 2px solid var(--vscode-focusBorder); outline-offset: 2px; }
+button:disabled { opacity: .6; }
+button.primary { color: var(--vscode-button-foreground); background: var(--vscode-button-background); }
+button.primary:hover { background: var(--vscode-button-hoverBackground); }
+.actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.home-navigation { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.muted, footer { color: var(--vscode-descriptionForeground); }
+dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; }
+dt { font-weight: 600; } dd { margin: 0; overflow-wrap: anywhere; }
+footer { margin-top: 16px; padding-top: 8px; overflow-wrap: anywhere; font-size: 11px; }
+body.conversation { height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; padding: 10px; }
+.conversation header { flex: 0 0 auto; margin-bottom: 4px; }
+.conversation main { display: flex; flex-direction: column; flex: 1; min-height: 0; min-width: 0; gap: 6px; }
+.conversation footer { flex: 0 0 auto; margin-top: 6px; padding-top: 0; }
+.chat-navigation { min-height: 28px; }
+.connection-attention { flex: 0 0 auto; max-height: 28vh; overflow: auto; }
+.connection-attention:empty { display: none; }
+.connection-attention p { margin: 4px 0; }
+#thread { flex: 1; min-height: 60px; min-width: 0; overflow-y: auto; overflow-x: hidden; overflow-anchor: none; }
+.message { margin: 16px 0 22px; min-width: 0; }
+.message.user { padding: 8px 10px; border-radius: 5px; background: var(--vscode-input-background); }
+.message > h2 { font-size: 11px; color: var(--vscode-descriptionForeground); margin-bottom: 6px; }
+.message-text { overflow-wrap: anywhere; line-height: 1.55; min-width: 0; }
+.user .message-text { white-space: pre-wrap; }
+.message-text > :first-child { margin-top: 0; }
+.message-text > :last-child { margin-bottom: 0; }
+.message-text p { white-space: pre-wrap; }
+.message-text ul, .message-text ol { padding-left: 22px; margin: 8px 0; }
+.message-text li { margin: 3px 0; white-space: pre-wrap; }
+.message-text a { color: var(--vscode-textLink-foreground); text-decoration: underline; }
+.message-text code { font-family: var(--vscode-editor-font-family); font-size: .95em; background: var(--vscode-textCodeBlock-background); padding: 1px 3px; border-radius: 2px; }
+.code-block { margin: 10px 0; min-width: 0; max-width: 100%; background: var(--vscode-textCodeBlock-background); border: 1px solid var(--vscode-contrastBorder, transparent); border-radius: 4px; }
+.code-bar { display: flex; align-items: center; justify-content: space-between; padding: 3px 6px; color: var(--vscode-descriptionForeground); font-size: 11px; }
+.code-block pre { margin: 0; padding: 8px; overflow-x: auto; max-width: 100%; white-space: pre; }
+.code-block code { padding: 0; background: transparent; overflow-wrap: normal; }
+blockquote { margin: 10px 0; padding-left: 10px; border-left: 2px solid var(--vscode-textBlockQuote-border); color: var(--vscode-descriptionForeground); }
+.message > .muted { font-size: 11px; margin: 8px 0 0; }
+.tool-activity { font-size: 11px; color: var(--vscode-descriptionForeground); margin-bottom: 10px; }
+.tool-activity:empty { display: none; }
+summary { cursor: pointer; overflow-wrap: anywhere; padding: 3px 0; line-height: 1.5; }
+.tool-activity dl { margin: 4px 0 8px 14px; }
+.tool-activity ul { padding-left: 20px; }
+.tool-outcome { font-size: 10px; margin-left: 6px; }
+.empty-guidance { padding: 20px 0; color: var(--vscode-descriptionForeground); }
+.empty-guidance h2 { color: var(--vscode-foreground); }
+.empty-guidance ul { padding-left: 20px; line-height: 1.8; }
+#execution-status { flex: 0 0 auto; margin: 0; font-size: 11px; color: var(--vscode-descriptionForeground); }
+.composer { display: flex; flex-direction: column; box-sizing: border-box; height: 112px; flex: 0 0 auto; padding: 6px; border: 1px solid var(--vscode-input-border, var(--vscode-panel-border)); background: var(--vscode-input-background); border-radius: 5px; }
+textarea, select { box-sizing: border-box; font: inherit; color: var(--vscode-input-foreground); background: var(--vscode-input-background); border: 1px solid var(--vscode-input-border, var(--vscode-panel-border)); border-radius: 2px; }
+textarea { display: block; width: 100%; resize: none; flex: 1; min-height: 48px; padding: 4px; border-color: transparent; margin: 0 0 5px; }
+select { max-width: 100%; min-width: 0; padding: 3px; }
+#thread:focus-visible, pre:focus-visible, textarea:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--vscode-focusBorder); outline-offset: 1px; }
+.composer p { margin: 4px; font-size: 11px; }
+.composer p:empty { display: none; }
+.execution-controls { flex: 0 0 auto; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.execution-controls > button { margin-left: auto; }
+.manual-controls { display: flex; gap: 4px; min-width: 0; flex: 1 1 110px; }
+.manual-controls select { width: 100%; }
+.auto-switch { display: inline-flex; align-items: center; gap: 4px; position: relative; cursor: pointer; font-size: 11px; }
+.auto-switch input { cursor: inherit; position: absolute; width: 28px; height: 16px; opacity: 0; margin: 0; }
+.switch-track { display: inline-block; width: 26px; height: 14px; border-radius: 10px; border: 1px solid var(--vscode-contrastBorder, var(--vscode-input-border, var(--vscode-descriptionForeground))); background: var(--vscode-input-background); }
+.switch-track::after { content: ''; display: block; width: 10px; height: 10px; margin: 2px; border-radius: 50%; background: var(--vscode-descriptionForeground); }
+.auto-switch input:checked + .switch-track { background: var(--vscode-button-background); }
+.auto-switch input:checked + .switch-track::after { transform: translateX(12px); background: var(--vscode-button-foreground); }
+.auto-switch input:focus-visible + .switch-track { outline: 2px solid var(--vscode-focusBorder); outline-offset: 2px; }
+.auto-switch:has(input:disabled) { opacity: .6; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+[hidden] { display: none !important; }
+
+.copy-response { margin-top: 8px; }
+.chat-splitter { flex: 0 0 10px; cursor: row-resize; touch-action: none; display: flex; align-items: center; justify-content: center; }
+.chat-splitter::after { content: ''; width: 48px; height: 3px; border-radius: 2px; background: var(--vscode-descriptionForeground); }
+.chat-splitter:hover::after, .chat-splitter.dragging::after { background: var(--vscode-focusBorder); }
+.chat-splitter:focus-visible { outline: 2px solid var(--vscode-focusBorder); outline-offset: 1px; }
+.composer > .muted { flex: 0 0 auto; }
+
+.recent-chats { margin-block: 12px; }
+.session-list { list-style: none; padding: 0; margin: 8px 0; }
+.session-row { display: flex; align-items: center; gap: 6px; margin-block: 6px; min-width: 0; }
+.session-open { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; gap: 4px 8px; text-align: left; padding: 8px; }
+.session-title { flex-basis: 100%; overflow-wrap: anywhere; }
+.session-open time, .session-current, .session-snippet { font-size: 11px; color: var(--vscode-descriptionForeground); }
+.session-snippet { flex-basis: 100%; overflow-wrap: anywhere; }
+.session-open[aria-current="true"] { border-color: var(--vscode-focusBorder); }
+.session-delete { flex: 0 0 auto; font-size: 11px; padding: 5px; }
+#chat-search { box-sizing: border-box; width: 100%; margin-block: 6px 12px; padding: 6px; color: var(--vscode-input-foreground); background: var(--vscode-input-background); border: 1px solid var(--vscode-input-border, var(--vscode-contrastBorder, transparent)); }
+#chat-search:focus-visible { outline: 1px solid var(--vscode-focusBorder); outline-offset: 1px; }
+
+.context-chips, .historical-context { display: flex; flex-wrap: wrap; gap: 4px; min-width: 0; }
+.context-chips { flex: 0 0 auto; max-height: 78px; overflow-y: auto; margin-bottom: 5px; }
+.context-chips:empty, .historical-context:empty { display: none; }
+.context-chip { display: inline-flex; align-items: center; gap: 4px; max-width: 100%; min-width: 0; box-sizing: border-box; padding: 2px 5px; border: 1px solid var(--vscode-contrastBorder, var(--vscode-panel-border)); border-radius: 4px; font-size: 11px; background: var(--vscode-badge-background, var(--vscode-input-background)); color: var(--vscode-badge-foreground, var(--vscode-foreground)); }
+.context-chip > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.context-chip button { flex: 0 0 auto; padding: 0 4px; line-height: 18px; }
+.historical-context { margin-bottom: 6px; }
+.historical-context .context-chip { overflow-wrap: anywhere; }
+.execution-controls > .add-context { margin-left: 0; font-size: 11px; }
+
+.provider-picker { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.provider-boundary { margin: 16px 0; padding: 8px 0; border-block: 1px solid var(--vscode-panel-border); color: var(--vscode-descriptionForeground); font-size: 11px; overflow-wrap: anywhere; }

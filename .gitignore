@@ -1,0 +1,15 @@
+docs/*
+node_modules/
+out/
+.nx-router-spike/
+.test-results/
+.vscode-test/
+coverage/
+*.vsix
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+/docs/**
+/docs/
